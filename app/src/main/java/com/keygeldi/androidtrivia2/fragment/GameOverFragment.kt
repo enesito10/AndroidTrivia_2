@@ -5,26 +5,35 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import com.keygeldi.androidtrivia2.R
 import com.keygeldi.androidtrivia2.databinding.FragmentGameOverBinding
-import com.keygeldi.androidtrivia2.databinding.FragmentGameWonBinding
 
 class GameOverFragment : Fragment() {
-    private lateinit var binding: FragmentGameOverBinding
+    private var _binding: FragmentGameOverBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentGameOverBinding.inflate(inflater, container, false)
+        _binding = FragmentGameOverBinding.inflate(inflater, container, false)
 
+        val status = arguments?.getInt("status") ?: 0
 
         binding.againButton.setOnClickListener {
-            findNavController().navigate(R.id.action_gameOverFragment_to_gameFragment)
+            val bundle = Bundle().apply {
+                putInt("status", status)
+            }
+            findNavController().navigate(R.id.action_gameOverFragment_to_gameFragment, bundle)
         }
+
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
