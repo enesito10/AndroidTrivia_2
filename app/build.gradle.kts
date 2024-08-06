@@ -4,6 +4,11 @@ plugins {
 }
 
 android {
+
+    viewBinding{
+        enable=true
+    }
+
     namespace = "com.keygeldi.androidtrivia2"
     compileSdk = 34
 

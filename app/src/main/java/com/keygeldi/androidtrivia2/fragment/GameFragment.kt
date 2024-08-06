@@ -5,23 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import com.keygeldi.androidtrivia2.R
+import com.keygeldi.androidtrivia2.databinding.FragmentGameBinding
 import com.keygeldi.androidtrivia2.questions.Question
 import com.keygeldi.androidtrivia2.questions.questions
 
-
 class GameFragment : Fragment() {
-    private lateinit var questionTextView: TextView
-    private lateinit var radioGroup: RadioGroup
-    private lateinit var option1: RadioButton
-    private lateinit var option2: RadioButton
-    private lateinit var option3: RadioButton
-    private lateinit var option4: RadioButton
+    private lateinit var binding: FragmentGameBinding
     private lateinit var currentQuestion: Question
 
     override fun onCreateView(
@@ -29,19 +20,11 @@ class GameFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_game,container,false)
+        binding = FragmentGameBinding.inflate(inflater, container, false)
 
-        questionTextView = view.findViewById(R.id.textView2)
-        radioGroup = view.findViewById(R.id.colorOptions)
-        option1 = view.findViewById(R.id.optionBlack)
-        option2 = view.findViewById(R.id.optionGreen)
-        option3 = view.findViewById(R.id.optionYellow)
-        option4 = view.findViewById(R.id.optionRed)
-
-        val submitBtn : Button = view.findViewById(R.id.submit_button)
-        submitBtn.setOnClickListener{
-            val selectedOption = radioGroup.checkedRadioButtonId
-            val selectedIndex = when (selectedOption){
+        binding.submitButton.setOnClickListener {
+            val selectedOption = binding.colorOptions.checkedRadioButtonId
+            val selectedIndex = when (selectedOption) {
                 R.id.optionBlack -> 0
                 R.id.optionGreen -> 1
                 R.id.optionYellow -> 2
@@ -57,18 +40,18 @@ class GameFragment : Fragment() {
 
         loadNewQuestion()
 
-        return view
+        return binding.root
     }
 
-    private fun loadNewQuestion(){
+    private fun loadNewQuestion() {
         currentQuestion = questions.random()
 
-        questionTextView.text=currentQuestion.text
-        option1.text = currentQuestion.options[0]
-        option2.text = currentQuestion.options[1]
-        option3.text = currentQuestion.options[2]
-        option4.text = currentQuestion.options[3]
+        binding.textView2.text = currentQuestion.text
+        binding.optionBlack.text = currentQuestion.options[0]
+        binding.optionGreen.text = currentQuestion.options[1]
+        binding.optionYellow.text = currentQuestion.options[2]
+        binding.optionRed.text = currentQuestion.options[3]
 
-        radioGroup.clearCheck()
+        binding.colorOptions.clearCheck()
     }
 }
