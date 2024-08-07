@@ -14,7 +14,9 @@ import com.keygeldi.androidtrivia2.questions.questions
 class GameFragment : Fragment() {
     private lateinit var binding: FragmentGameBinding
     private lateinit var currentQuestion: Question
-    private var status: Int = 1  // 1 for random question, 0 for fixed question
+    private lateinit var shuffledQuestions: List<Question>
+    var questionIndex:Int = 0
+    var score = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,49 +25,55 @@ class GameFragment : Fragment() {
     ): View? {
         binding = FragmentGameBinding.inflate(inflater, container, false)
 
-        status = arguments?.getInt("status") ?: 1
+        shuffledQuestions = questions.shuffled()
+        loadNewQuestion()
+
+        binding.skor.text = "Skor : $score"
 
         binding.submitButton.setOnClickListener {
-            val selectedOption = binding.colorOptions.checkedRadioButtonId
+            val selectedOption = binding.cevaplar.checkedRadioButtonId
             val selectedIndex = when (selectedOption) {
-                R.id.optionBlack -> 0
-                R.id.optionGreen -> 1
-                R.id.optionYellow -> 2
-                R.id.optionRed -> 3
+                R.id.option1 -> 0
+                R.id.option2 -> 1
+                R.id.option3 -> 2
+                R.id.option4 -> 3
                 else -> -1
             }
-
-            if (selectedIndex == currentQuestion.correctOptionIndex) {
-                val bundle = Bundle().apply {
-                    putInt("status", 1)
+            if (selectedIndex == currentQuestion.correct_answer) {
+                score++
+                questionIndex++
+                if (questionIndex < shuffledQuestions.size) {
+                    loadNewQuestion()
+                } else {
+                    findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment) // oyun bittiğinde
                 }
-                findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment, bundle)
             } else {
-                val bundle = Bundle().apply {
-                    putInt("status", 0)
-                }
-                findNavController().navigate(R.id.action_gameFragment_to_gameOverFragment, bundle)
-            }
-        }
 
-        loadNewQuestion()
+                score = 0
+                questionIndex = 0
+                findNavController().navigate(R.id.action_gameFragment_to_gameOverFragment, )
+            }
+            binding.skor.text = "Skor : $score"
+
+        }
 
         return binding.root
     }
 
     private fun loadNewQuestion() {
-        if (status == 1) {
-            currentQuestion = questions.random()
-        } else
-            currentQuestion = questions.last()
+        if (score == 0) {
+            shuffledQuestions = questions.shuffled()
+            questionIndex = 0
+        }
+            currentQuestion =shuffledQuestions[questionIndex]
 
+            binding.textView2.text = currentQuestion.question_text
+            binding.option1.text = currentQuestion.question_answer[0]
+            binding.option2.text = currentQuestion.question_answer[1]
+            binding.option3.text = currentQuestion.question_answer[2]
+            binding.option4.text = currentQuestion.question_answer[3]
 
-        binding.textView2.text = currentQuestion.text
-        binding.optionBlack.text = currentQuestion.options[0]
-        binding.optionGreen.text = currentQuestion.options[1]
-        binding.optionYellow.text = currentQuestion.options[2]
-        binding.optionRed.text = currentQuestion.options[3]
+            binding.cevaplar.clearCheck()
 
-        binding.colorOptions.clearCheck()
     }
 }
