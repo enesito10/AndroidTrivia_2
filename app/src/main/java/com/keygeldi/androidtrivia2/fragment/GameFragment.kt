@@ -1,5 +1,6 @@
 package com.keygeldi.androidtrivia2.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,8 +16,9 @@ class GameFragment : Fragment() {
     private lateinit var binding: FragmentGameBinding
     private lateinit var currentQuestion: Question
     private lateinit var shuffledQuestions: List<Question>
-    var questionIndex:Int = 0
+    var questionIndex: Int = 0
     var score = 0
+    var selectedIndex: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,32 +32,55 @@ class GameFragment : Fragment() {
 
         binding.skor.text = "Skor : $score"
 
+        binding.textBack.setOnClickListener{
+            findNavController().navigate(R.id.action_gameFragment_to_titleFragment)
+        }
+
+        binding.option1.setOnClickListener {
+            resetOptionColors()
+            binding.option1.setBackgroundColor(Color.GRAY)
+            onOptionSelected(0)
+        }
+        binding.option2.setOnClickListener {
+            resetOptionColors()
+            binding.option2.setBackgroundColor(Color.GRAY)
+            onOptionSelected(1)
+        }
+        binding.option3.setOnClickListener {
+            resetOptionColors()
+            binding.option3.setBackgroundColor(Color.GRAY)
+            onOptionSelected(2)
+        }
+        binding.option4.setOnClickListener {
+            resetOptionColors()
+            binding.option4.setBackgroundColor(Color.GRAY)
+            onOptionSelected(3)
+        }
+
         binding.submitButton.setOnClickListener {
-            val selectedOption = binding.cevaplar.checkedRadioButtonId
-            val selectedIndex = when (selectedOption) {
-                R.id.option1 -> 0
-                R.id.option2 -> 1
-                R.id.option3 -> 2
-                R.id.option4 -> 3
-                else -> -1
-            }
             if (selectedIndex == currentQuestion.correct_answer) {
                 score++
                 questionIndex++
-                if (questionIndex < shuffledQuestions.size) {
-                    loadNewQuestion()
-                } else {
-                    findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment) // oyun bittiğinde
-                }
+                displayCorrectAnswer()
+                binding.submitButton.postDelayed({
+                    if (questionIndex < shuffledQuestions.size) {
+                        loadNewQuestion()
+                    } else {
+                        findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment)
+                    }
+                }, 1000)
             } else {
-
-                score = 0
-                questionIndex = 0
-                findNavController().navigate(R.id.action_gameFragment_to_gameOverFragment, )
+                displayCorrectAnswer()
+                binding.submitButton.postDelayed({
+                    score = 0
+                    questionIndex = 0
+                    findNavController().navigate(R.id.action_gameFragment_to_gameOverFragment)
+                }, 1000)
             }
-            binding.skor.text = "Skor : $score"
 
+            binding.skor.text = "Skor : $score"
         }
+
 
         return binding.root
     }
@@ -65,15 +90,52 @@ class GameFragment : Fragment() {
             shuffledQuestions = questions.shuffled()
             questionIndex = 0
         }
-            currentQuestion =shuffledQuestions[questionIndex]
+        currentQuestion = shuffledQuestions[questionIndex]
 
-            binding.textView2.text = currentQuestion.question_text
-            binding.option1.text = currentQuestion.question_answer[0]
-            binding.option2.text = currentQuestion.question_answer[1]
-            binding.option3.text = currentQuestion.question_answer[2]
-            binding.option4.text = currentQuestion.question_answer[3]
+        binding.textView2.text = currentQuestion.question_text
+        binding.option1.text = currentQuestion.question_answer[0]
+        binding.option2.text = currentQuestion.question_answer[1]
+        binding.option3.text = currentQuestion.question_answer[2]
+        binding.option4.text = currentQuestion.question_answer[3]
 
-            binding.cevaplar.clearCheck()
+        resetOptionColors()
+        selectedIndex = null // Seçimi sıfırla
+    }
 
+    private fun onOptionSelected(index: Int) {
+        selectedIndex = index
+    }
+
+    private fun resetOptionColors() {
+        binding.option1.setBackgroundColor(Color.WHITE)
+        binding.option1.setTextColor(Color.BLACK)
+        binding.option2.setBackgroundColor(Color.WHITE)
+        binding.option2.setTextColor(Color.BLACK)
+        binding.option3.setBackgroundColor(Color.WHITE)
+        binding.option3.setTextColor(Color.BLACK)
+        binding.option4.setBackgroundColor(Color.WHITE)
+        binding.option4.setTextColor(Color.BLACK)
+    }
+    private fun displayCorrectAnswer() {
+        // Tüm seçenekleri sıfırla
+        resetOptionColors()
+        // Doğru cevabı yeşil yap
+        when (currentQuestion.correct_answer) {
+            0 -> binding.option1.setBackgroundColor(Color.GREEN)
+            1 -> binding.option2.setBackgroundColor(Color.GREEN)
+            2 -> binding.option3.setBackgroundColor(Color.GREEN)
+            3 -> binding.option4.setBackgroundColor(Color.GREEN)
+        }
+        // Yanlış cevabı kırmızı yap
+        selectedIndex?.let {
+            if (it != currentQuestion.correct_answer) {
+                when (it) {
+                    0 -> binding.option1.setBackgroundColor(Color.RED)
+                    1 -> binding.option2.setBackgroundColor(Color.RED)
+                    2 -> binding.option3.setBackgroundColor(Color.RED)
+                    3 -> binding.option4.setBackgroundColor(Color.RED)
+                }
+            }
+        }
     }
 }

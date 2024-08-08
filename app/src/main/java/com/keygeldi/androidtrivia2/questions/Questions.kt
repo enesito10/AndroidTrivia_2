@@ -8,8 +8,6 @@ data class Question(
 )
 
 val questions = listOf(
-    Question("What color is the Android mascot's background?", listOf("Black", "Green", "Yellow", "Red"), 0),
-    Question("What color is the Android mascot's ?", listOf("Black", "White", "Yellow", "Red"), 1),
     Question("What is the capital of France?", listOf("Berlin", "Madrid", "Paris", "Rome"), 2),
     Question("What is the capital of Turkey?", listOf("Berlin", "Madrid", "Paris", "Ankara"), 3),
     Question("What is the capital of Germany?", listOf("Berlin", "Madrid", "Paris", "Rome"), 0),
@@ -21,6 +19,5 @@ val questions = listOf(
     Question("What is the capital of Japan?", listOf("Berlin", "Tokyo", "Paris", "Rome"), 1),
     Question("What is the capital of China?", listOf("Berlin", "Beijing", "Paris", "Rome"), 1),
     Question("What is the capital of India?", listOf("Berlin", "New Delhi", "Paris", "Rome"), 1),
-
     )
 
