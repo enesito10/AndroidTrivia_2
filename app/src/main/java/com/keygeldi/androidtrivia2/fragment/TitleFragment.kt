@@ -8,27 +8,29 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import com.keygeldi.androidtrivia2.R
+import com.keygeldi.androidtrivia2.databinding.FragmentTitleBinding
 
 
 class TitleFragment : Fragment() {
+    private lateinit var binding: FragmentTitleBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_title,container,false)
-        val startBtn : Button= view.findViewById(R.id.start_button)
+        binding = FragmentTitleBinding.inflate(inflater,container,false)
 
-        startBtn.setOnClickListener{
-            findNavController().navigate(R.id.action_titleFragment_to_gameFragment)
+
+        binding.startButton.setOnClickListener{
+            findNavController().navigate(R.id.action_titleFragment_to_chooseFragment2)
 
             //val fragment = GameFragment()
             //val transaction = fragmentManager?.beginTransaction()
             //transaction?.replace(R.id.nav_container,fragment)?.commit()
         }
 
-        return view
+        return binding.root
     }
 }
 

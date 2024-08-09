@@ -24,36 +24,36 @@ private lateinit var binding: FragmentChooseBinding
         binding.linearLayout3.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("question_set","city_questions")
-            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment) //City
+            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle) //City
         }
         binding.linearLayout1.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("question_set","flag_questions")
-            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment) //Flag
+            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle) //Flag
         }
 
         binding.linearLayout2.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("question_set","3_questions")
-            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment)
+            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle)
         }
 
         binding.linearLayout4.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("question_set","4_questions")
-            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment)
+            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle)
         }
 
         binding.linearLayout5.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("question_set","5_questions")
-            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment)
+            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle)
         }
 
         binding.linearLayout6.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("question_set","6_questions")
-            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment)
+            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle)
         }
 
         return binding.root

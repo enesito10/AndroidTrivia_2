@@ -9,13 +9,14 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.keygeldi.androidtrivia2.R
 import com.keygeldi.androidtrivia2.databinding.FragmentGameBinding
-import com.keygeldi.androidtrivia2.questions.Question
+import com.keygeldi.androidtrivia2.questions.BaseQuestions
+import com.keygeldi.androidtrivia2.questions.flagquestions
 import com.keygeldi.androidtrivia2.questions.questions
 
 class GameFragment : Fragment() {
     private lateinit var binding: FragmentGameBinding
-    private lateinit var currentQuestion: Question
-    private lateinit var shuffledQuestions: List<Question>
+    private lateinit var currentQuestion: BaseQuestions
+    private lateinit var shuffledQuestions: List<BaseQuestions>
     var questionIndex: Int = 0
     var score = 0
     var selectedIndex: Int? = null
@@ -27,13 +28,21 @@ class GameFragment : Fragment() {
     ): View? {
         binding = FragmentGameBinding.inflate(inflater, container, false)
 
-        shuffledQuestions = questions.shuffled()
+        val questionSet = arguments?.getString("question_set")
+
+        shuffledQuestions = when(questionSet) {
+            "city_questions" -> questions.shuffled()
+            "flag_questions" -> flagquestions.shuffled()
+            else -> questions.shuffled() //Varsayılan olarak ayarlayabiliriz.
+        }
+
+
         loadNewQuestion()
 
         binding.skor.text = "Skor : $score"
 
         binding.textBack.setOnClickListener{
-            findNavController().navigate(R.id.action_gameFragment_to_titleFragment)
+            findNavController().navigate(R.id.action_gameFragment_to_chooseFragment2)
         }
 
         binding.option1.setOnClickListener {
@@ -66,7 +75,9 @@ class GameFragment : Fragment() {
                     if (questionIndex < shuffledQuestions.size) {
                         loadNewQuestion()
                     } else {
-                        findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment)
+                        findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment,Bundle().apply{
+                            putString("question_set", questionSet)
+                        })
                     }
                 }, 1000)
             } else {
@@ -74,7 +85,9 @@ class GameFragment : Fragment() {
                 binding.submitButton.postDelayed({
                     score = 0
                     questionIndex = 0
-                    findNavController().navigate(R.id.action_gameFragment_to_gameOverFragment)
+                    findNavController().navigate(R.id.action_gameFragment_to_gameOverFragment,Bundle().apply {
+                        putString("question_set", questionSet)
+                    })
                 }, 1000)
             }
 
@@ -87,7 +100,7 @@ class GameFragment : Fragment() {
 
     private fun loadNewQuestion() {
         if (score == 0) {
-            shuffledQuestions = questions.shuffled()
+            shuffledQuestions = shuffledQuestions.shuffled()
             questionIndex = 0
         }
         currentQuestion = shuffledQuestions[questionIndex]

@@ -20,11 +20,13 @@ class GameOverFragment : Fragment() {
     ): View? {
         _binding = FragmentGameOverBinding.inflate(inflater, container, false)
 
+        val questionSet = arguments?.getString("question_set")
         val status = arguments?.getInt("status") ?: 0
 
         binding.againButton.setOnClickListener {
             val bundle = Bundle().apply {
                 putInt("status", status)
+                putString("question_set",questionSet)
             }
             findNavController().navigate(R.id.action_gameOverFragment_to_gameFragment, bundle)
         }

@@ -19,18 +19,19 @@ class GameWonFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentGameWonBinding.inflate(inflater, container, false)
-        val view = binding.root
 
+        val questionSet = arguments?.getString("question_set")
         val status = arguments?.getInt("status") ?: 1
 
         binding.newButton.setOnClickListener {
             val bundle = Bundle().apply {
                 putInt("status", status)
+                putString("question_set", questionSet)
             }
             findNavController().navigate(R.id.action_gameWonFragment_to_gameFragment, bundle)
         }
 
-        return view
+        return binding.root
     }
 
     override fun onDestroyView() {
