@@ -36,7 +36,6 @@ class GameFragment : Fragment() {
             else -> questions.shuffled() //Varsayılan olarak ayarlayabiliriz.
         }
 
-
         loadNewQuestion()
 
         binding.skor.text = "Skor : $score"

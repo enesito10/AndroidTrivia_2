@@ -35,25 +35,25 @@ private lateinit var binding: FragmentChooseBinding
         binding.linearLayout2.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("question_set","3_questions")
-            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle)
+            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle) //3
         }
 
         binding.linearLayout4.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("question_set","4_questions")
-            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle)
+            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle) //4
         }
 
         binding.linearLayout5.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("question_set","5_questions")
-            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle)
+            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle) //5
         }
 
         binding.linearLayout6.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("question_set","6_questions")
-            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle)
+            findNavController().navigate(R.id.action_chooseFragment2_to_gameFragment,bundle) //6
         }
 
         return binding.root
