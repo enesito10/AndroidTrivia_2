@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="108dp"
-        android:backgroundTint="@color/material_dynamic_neutral60"
+        android:backgroundTint="@color/material_dynamic_neutral10"
         android:text="NEXT MATCH"
         android:textColor="@color/design_default_color_secondary"
         app:cornerRadius="4dp"

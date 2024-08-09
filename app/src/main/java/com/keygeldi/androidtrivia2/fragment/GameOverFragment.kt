@@ -31,6 +31,10 @@ class GameOverFragment : Fragment() {
             findNavController().navigate(R.id.action_gameOverFragment_to_gameFragment, bundle)
         }
 
+        binding.homeButton.setOnClickListener {
+            findNavController().navigate((R.id.action_gameOverFragment_to_chooseFragment2))
+        }
+
         return binding.root
     }
 
