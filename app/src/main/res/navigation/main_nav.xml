@@ -11,8 +11,8 @@
         android:label="fragment_title"
         tools:layout="@layout/fragment_title">
         <action
-            android:id="@+id/action_titleFragment_to_gameFragment"
-            app:destination="@id/gameFragment" />
+            android:id="@+id/action_titleFragment_to_chooseFragment2"
+            app:destination="@id/chooseFragment2" />
     </fragment>
 
     <fragment
@@ -48,6 +48,15 @@
         tools:layout="@layout/fragment_game_over">
         <action
             android:id="@+id/action_gameOverFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseFragment2"
+        android:name="com.keygeldi.androidtrivia2.fragment.ChooseFragment"
+        android:label="ChooseFragment"
+        tools:layout="@layout/fragment_choose">
+        <action
+            android:id="@+id/action_chooseFragment2_to_gameFragment"
             app:destination="@id/gameFragment" />
     </fragment>
 </navigation>
