@@ -37,8 +37,8 @@
         android:label="gameWonFragment"
         tools:layout="@layout/fragment_game_won">
         <action
-            android:id="@+id/action_gameWonFragment_to_gameFragment"
-            app:destination="@id/gameFragment" />
+            android:id="@+id/action_gameWonFragment_to_chooseFragment2"
+            app:destination="@id/chooseFragment2" />
     </fragment>
 
     <fragment

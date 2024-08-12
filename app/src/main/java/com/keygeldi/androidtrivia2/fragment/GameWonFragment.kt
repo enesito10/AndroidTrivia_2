@@ -25,10 +25,10 @@ class GameWonFragment : Fragment() {
 
         binding.newButton.setOnClickListener {
             val bundle = Bundle().apply {
-                putInt("status", status)
-                putString("question_set", questionSet)
+                putString("completed_question_set", questionSet)
+                putInt("status",status)
             }
-            findNavController().navigate(R.id.action_gameWonFragment_to_gameFragment, bundle)
+            findNavController().navigate(R.id.action_gameWonFragment_to_chooseFragment2, bundle)
         }
 
         return binding.root

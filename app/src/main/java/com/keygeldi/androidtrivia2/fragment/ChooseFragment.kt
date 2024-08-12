@@ -1,5 +1,6 @@
 package com.keygeldi.androidtrivia2.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,9 @@ private lateinit var binding: FragmentChooseBinding
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentChooseBinding.inflate(inflater, container, false)
+
+        val completedQuestionSet = arguments?.getString("completed_question_set")
+        highlightCompletedSet(completedQuestionSet)
 
         binding.linearLayout3.setOnClickListener{
             val bundle = Bundle()
@@ -57,6 +61,16 @@ private lateinit var binding: FragmentChooseBinding
         }
 
         return binding.root
+    }
+    private fun highlightCompletedSet(completedQuestionSet: String?) {
+        when(completedQuestionSet) {
+            "city_questions" -> binding.linearLayout3.setBackgroundColor(Color.GREEN)
+            "flag_questions" -> binding.linearLayout1.setBackgroundColor(Color.GREEN)
+            "3_questions" -> binding.linearLayout2.setBackgroundColor(Color.GREEN)
+            "4_questions" -> binding.linearLayout4.setBackgroundColor(Color.GREEN)
+            "5_questions" -> binding.linearLayout5.setBackgroundColor(Color.GREEN)
+            "6_questions" -> binding.linearLayout6.setBackgroundColor(Color.GREEN)
+        }
     }
 
 }
