@@ -6,20 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.keygeldi.androidtrivia2.R
 import com.keygeldi.androidtrivia2.databinding.FragmentGameBinding
 import com.keygeldi.androidtrivia2.questions.BaseQuestions
 import com.keygeldi.androidtrivia2.questions.flagquestions
 import com.keygeldi.androidtrivia2.questions.questions
+import com.keygeldi.androidtrivia2.viewmodel.GameViewModel
 
 class GameFragment : Fragment() {
+
     private lateinit var binding: FragmentGameBinding
-    private lateinit var currentQuestion: BaseQuestions
-    private lateinit var shuffledQuestions: List<BaseQuestions>
-    var questionIndex: Int = 0
-    var score = 0
-    var selectedIndex: Int? = null
+    private lateinit var viewModel: GameViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,17 +27,22 @@ class GameFragment : Fragment() {
     ): View? {
         binding = FragmentGameBinding.inflate(inflater, container, false)
 
+        viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
+
         val questionSet = arguments?.getString("question_set")
 
-        shuffledQuestions = when(questionSet) {
+        val questionsList = when (questionSet) {
             "city_questions" -> questions.shuffled()
             "flag_questions" -> flagquestions.shuffled()
-            else -> questions.shuffled() //Varsayılan olarak ayarlayabiliriz.
+            else -> questions.shuffled() // Default
         }
 
+        viewModel.setShuffledQuestions(questionsList)
         loadNewQuestion()
 
-        binding.skor.text = "Skor : $score"
+        viewModel.score.observe(viewLifecycleOwner) { score ->
+            binding.skor.text = "Skor : $score"
+        }
 
         binding.textBack.setOnClickListener{
             findNavController().navigate(R.id.action_gameFragment_to_chooseFragment2)
@@ -66,15 +70,15 @@ class GameFragment : Fragment() {
         }
 
         binding.submitButton.setOnClickListener {
-            if (selectedIndex == currentQuestion.correct_answer) {
-                score++
-                questionIndex++
+            if (viewModel.selectedIndex.value == viewModel.currentQuestion.value?.correct_answer) {
+                viewModel.incrementScore()
+                viewModel.incrementQuestionIndex()
                 displayCorrectAnswer()
                 binding.submitButton.postDelayed({
-                    if (questionIndex < shuffledQuestions.size) {
+                    if (viewModel.questionIndex.value!! < viewModel.shuffledQuestions.value!!.size) {
                         loadNewQuestion()
                     } else {
-                        findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment,Bundle().apply{
+                        findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment, Bundle().apply {
                             putString("question_set", questionSet)
                         })
                     }
@@ -82,27 +86,25 @@ class GameFragment : Fragment() {
             } else {
                 displayCorrectAnswer()
                 binding.submitButton.postDelayed({
-                    score = 0
-                    questionIndex = 0
-                    findNavController().navigate(R.id.action_gameFragment_to_gameOverFragment,Bundle().apply {
+                    viewModel.setScore(0)
+                    viewModel.setQuestionIndex(0)
+                    findNavController().navigate(R.id.action_gameFragment_to_gameOverFragment, Bundle().apply {
                         putString("question_set", questionSet)
                     })
                 }, 1000)
             }
-
-            binding.skor.text = "Skor : $score"
         }
-
 
         return binding.root
     }
 
     private fun loadNewQuestion() {
-        if (score == 0) {
-            shuffledQuestions = shuffledQuestions.shuffled()
-            questionIndex = 0
+        if (viewModel.score.value == 0) {
+            viewModel.setShuffledQuestions(viewModel.shuffledQuestions.value!!.shuffled())
+            viewModel.setQuestionIndex(0)
         }
-        currentQuestion = shuffledQuestions[questionIndex]
+        val currentQuestion = viewModel.shuffledQuestions.value!![viewModel.questionIndex.value!!]
+        viewModel.setCurrentQuestion(currentQuestion)
 
         binding.textView2.text = currentQuestion.question_text
         binding.option1.text = currentQuestion.question_answer[0]
@@ -111,11 +113,11 @@ class GameFragment : Fragment() {
         binding.option4.text = currentQuestion.question_answer[3]
 
         resetOptionColors()
-        selectedIndex = null // Seçimi sıfırla
+        viewModel.setSelectedIndex(null) // Reset selection
     }
 
     private fun onOptionSelected(index: Int) {
-        selectedIndex = index
+        viewModel.setSelectedIndex(index)
     }
 
     private fun resetOptionColors() {
@@ -128,19 +130,17 @@ class GameFragment : Fragment() {
         binding.option4.setBackgroundColor(Color.WHITE)
         binding.option4.setTextColor(Color.BLACK)
     }
+
     private fun displayCorrectAnswer() {
-        // Tüm seçenekleri sıfırla
         resetOptionColors()
-        // Doğru cevabı yeşil yap
-        when (currentQuestion.correct_answer) {
+        when (viewModel.currentQuestion.value?.correct_answer) {
             0 -> binding.option1.setBackgroundColor(Color.GREEN)
             1 -> binding.option2.setBackgroundColor(Color.GREEN)
             2 -> binding.option3.setBackgroundColor(Color.GREEN)
             3 -> binding.option4.setBackgroundColor(Color.GREEN)
         }
-        // Yanlış cevabı kırmızı yap
-        selectedIndex?.let {
-            if (it != currentQuestion.correct_answer) {
+        viewModel.selectedIndex.value?.let {
+            if (it != viewModel.currentQuestion.value?.correct_answer) {
                 when (it) {
                     0 -> binding.option1.setBackgroundColor(Color.RED)
                     1 -> binding.option2.setBackgroundColor(Color.RED)
